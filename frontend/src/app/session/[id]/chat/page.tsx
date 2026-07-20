@@ -101,7 +101,7 @@ export default function TutorChat() {
         id: Math.random().toString(),
         session_id: id,
         role: "assistant",
-        content: "An error occurred trying to connect to local LLM. Please make sure Ollama and FastAPI are running.",
+        content: "An error occurred trying to connect to the local LLM. Please make sure the backend server is running and models are downloaded.",
         language: langPref,
         created_at: new Date().toISOString(),
       };
