@@ -9,4 +9,5 @@ numpy
 httpx
 python-multipart
 python-dotenv
-ollama
+llama-cpp-python
+huggingface-hub
