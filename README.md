@@ -57,14 +57,13 @@ gemma-compass/
 ## ⚙️ Local Setup Instructions
 
 ### Prerequisites
-1. **Ollama**: Install Ollama on your machine from [ollama.com](https://ollama.com).
-2. **Ollama Models**: Pull models locally:
+1. **Python 3.10+** and **Node.js 18+**.
+2. **Local Models**: Download the local GGUF models directly via our automated script:
    ```bash
-   ollama pull gemma4:e2b
-   ollama pull nomic-embed-text
+   cd backend
+   ./download.sh
    ```
-   *(Note: Gemma Compass can also run with `gemma4:e4b` or any similar llama model if configured in settings).*
-3. **Python 3.10+** and **Node.js 18+**.
+   *(Note: This downloads Google's Gemma 4 E4B model and Nomic's embedding model into a local folder, removing any need for external Ollama installations).*
 
 ---
 
