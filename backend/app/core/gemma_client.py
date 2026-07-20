@@ -1,57 +1,36 @@
-import httpx
 import logging
+from ollama import Client
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 def call_gemma(messages: list[dict], response_format_json: bool = False) -> str:
     """
-    Calls the local Ollama LLM with a list of messages.
-    Supports both OpenAI-compatible and native Ollama chat APIs.
+    Calls the local Ollama LLM with a list of messages using the official ollama library.
     """
-    url = settings.OLLAMA_URL.rstrip("/")
-    
-    # 1. Try OpenAI-compatible endpoint if /v1 is in the URL
-    if "/v1" in url:
-        endpoint = f"{url}/chat/completions"
-        payload = {
-            "model": settings.MODEL_TAG,
-            "messages": messages,
-            "temperature": 0.2
-        }
-        if response_format_json:
-            payload["response_format"] = {"type": "json_object"}
-            
-        try:
-            logger.info(f"Sending request to OpenAI-compatible endpoint: {endpoint}")
-            response = httpx.post(endpoint, json=payload, timeout=90.0)
-            response.raise_for_status()
-            data = response.json()
-            return data["choices"][0]["message"]["content"]
-        except Exception as e:
-            logger.error(f"OpenAI-compatible chat completion failed: {str(e)}")
-            # Strip /v1 and retry with native endpoint
-            native_url = url.replace("/v1", "")
-            logger.info(f"Retrying on native Ollama chat route: {native_url}/api/chat")
-            return _call_native_gemma(native_url, messages, response_format_json)
-    else:
-        return _call_native_gemma(url, messages, response_format_json)
+    # Clean the host URL (strip trailing slashes and /v1)
+    host = settings.OLLAMA_URL.rstrip("/")
+    if host.endswith("/v1"):
+        host = host[:-3].rstrip("/")
 
-def _call_native_gemma(base_url: str, messages: list[dict], response_format_json: bool = False) -> str:
-    """Helper calling the native Ollama /api/chat endpoint directly."""
-    endpoint = f"{base_url}/api/chat"
-    payload = {
-        "model": settings.MODEL_TAG,
-        "messages": messages,
-        "stream": False,
-        "options": {
-            "temperature": 0.2
-        }
-    }
-    if response_format_json:
-        payload["format"] = "json"
+    # Instantiate the official Client with a 300.0s (5 minutes) timeout
+    client = Client(host=host, timeout=300.0)
+
+    try:
+        logger.info(f"Sending chat request to Ollama ({host}) for model {settings.MODEL_TAG}")
         
-    response = httpx.post(endpoint, json=payload, timeout=90.0)
-    response.raise_for_status()
-    data = response.json()
-    return data["message"]["content"]
+        # Specify format if JSON is requested
+        format_param = "json" if response_format_json else None
+        
+        response = client.chat(
+            model=settings.MODEL_TAG,
+            messages=messages,
+            format=format_param,
+            options={
+                "temperature": 0.2
+            }
+        )
+        return response.message.content
+    except Exception as e:
+        logger.error(f"Ollama chat completion failed: {str(e)}")
+        raise e

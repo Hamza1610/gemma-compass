@@ -8,6 +8,7 @@ from app.schemas import MessageCreate, MessageResponse
 from app.services.retriever import retrieve_top_chunks
 from app.core.gemma_client import call_gemma
 from app.services.prompts import CHAT_PROMPT_TEMPLATE
+from app.core.config import settings
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
@@ -32,19 +33,19 @@ def send_message(
     # 3. Retrieve relevant chunks if document exists, otherwise empty
     retrieved_content = "No context document uploaded yet."
     if doc:
-        chunks = retrieve_top_chunks(db, doc.id, message_data.content, limit=4)
+        chunks = retrieve_top_chunks(db, doc.id, message_data.content, limit=settings.CHAT_CONTEXT_LIMIT)
         if chunks:
             retrieved_content = "\n\n".join([
                 f"[Excerpt {idx + 1} from {doc.filename}]:\n{c.text}"
                 for idx, c in enumerate(chunks)
             ])
 
-    # 4. Fetch last 10 messages for context
+    # 4. Fetch last messages for context
     history_records = db.exec(
         select(Message)
         .where(Message.session_id == session_id)
         .order_by(Message.created_at.desc())
-        .limit(10)
+        .limit(settings.CHAT_HISTORY_LIMIT)
     ).all()
     # Reverse history to be in ascending order
     history_records.reverse()

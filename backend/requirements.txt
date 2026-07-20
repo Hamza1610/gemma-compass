@@ -8,3 +8,5 @@ pytesseract
 numpy
 httpx
 python-multipart
+python-dotenv
+ollama

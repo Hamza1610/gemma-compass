@@ -40,11 +40,14 @@ def generate_quiz_for_document(session: Session, document_id: str) -> list[QuizQ
     try:
         logger.info("Generating quiz questions via Gemma...")
         response_text = call_gemma([{"role": "user", "content": quiz_prompt}], response_format_json=True)
+        logger.info(f"Raw LLM Response: {response_text}")
         questions_data = json.loads(response_text)
 
         # Handle formatting edge cases
         if isinstance(questions_data, dict):
-            if "questions" in questions_data:
+            if "question" in questions_data and "options" in questions_data and "correct_answer" in questions_data:
+                questions_data = [questions_data]
+            elif "questions" in questions_data:
                 questions_data = questions_data["questions"]
             else:
                 questions_data = list(questions_data.values())

@@ -12,6 +12,8 @@ from app.models import Session as DBSession, Document, Concept, KnowledgeGap
 from app.services.quiz_generator import generate_quiz_for_document, grade_quiz_answer
 
 def test_gemma_phase():
+    import logging
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     print("Testing Phase 4 Gemma & Quiz Integration...")
     init_db()
 
