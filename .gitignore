@@ -31,3 +31,5 @@ frontend/.env.development.local
 
 # Project specific exclusions
 gemma-compass-architecture.md
+
+*.env
