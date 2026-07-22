@@ -33,3 +33,4 @@ frontend/.env.development.local
 gemma-compass-architecture.md
 
 *.env
+*.gguf
