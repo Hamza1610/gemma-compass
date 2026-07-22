@@ -17,7 +17,7 @@ export default function LandingPage() {
             <img 
               src="/images/logo.png" 
               alt="Gemma Compass" 
-              className="h-8 md:h-10 w-auto object-contain transition-transform group-hover:scale-105" 
+              className="h-8 md:h-10 w-auto object-contain transition-transform group-hover:scale-105 mix-blend-multiply" 
             />
           </Link>
 
@@ -33,7 +33,7 @@ export default function LandingPage() {
               Log In
             </Link>
             <Link 
-              href="/dashboard" 
+              href="/signup" 
               className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-gray-900/10 transition-all hover:shadow-gray-900/20 flex items-center space-x-2"
             >
               <span>Get Started</span>
@@ -72,7 +72,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4 w-full">
               <Link 
-                href="/dashboard"
+                href="/signup"
                 className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold px-8 py-4 rounded-full shadow-xl shadow-blue-600/20 transition-all hover:shadow-blue-600/30 flex items-center justify-center space-x-2"
               >
                 <span>Launch Compass Campus</span>
