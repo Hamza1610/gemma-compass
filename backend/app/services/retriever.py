@@ -23,7 +23,7 @@ def retrieve_top_chunks(session: Session, document_id: str, query: str, limit: i
         query_emb = get_embedding(query)
     except Exception as e:
         logger.error(f"Error fetching query embedding: {str(e)}")
-        # Fallback to returning sequential chunks if Ollama/Embedding is offline
+        # Fallback to returning sequential chunks if Embedding model is offline
         logger.warning("Falling back to retrieving first 4 chunks sequentially.")
         return session.exec(select(Chunk).where(Chunk.document_id == document_id).order_by(Chunk.order_index).limit(limit)).all()
 

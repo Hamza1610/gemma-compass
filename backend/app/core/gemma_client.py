@@ -1,36 +1,66 @@
 import logging
-from ollama import Client
+from pathlib import Path
+from huggingface_hub import hf_hub_download
+from llama_cpp import Llama
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
+# Singleton LLM instance
+_llm_instance = None
+
+def get_llm() -> Llama:
+    """
+    Thread-safe lazy initialization of the local Gemma 4 E4B model.
+    Checks if the model file exists, otherwise raising a clear instruction error.
+    """
+    global _llm_instance
+    if _llm_instance is None:
+        logger.info("Initializing Llama model instance for Gemma 4...")
+        model_path = Path(settings.MODELS_DIR) / settings.GEMMA_FILENAME
+        
+        # Raise error if model does not exist
+        if not model_path.exists():
+            err_msg = (
+                f"Model file {settings.GEMMA_FILENAME} not found at {settings.MODELS_DIR}. "
+                "Please run './download.sh' in the backend directory to download the required local models."
+            )
+            logger.error(err_msg)
+            raise FileNotFoundError(err_msg)
+            
+        logger.info(f"Loading GGUF model from {model_path}...")
+        # n_ctx=2048 is a reasonable size for local chat and RAG tasks
+        # n_gpu_layers=-1 utilizes CUDA/MPS acceleration if compile flags were set, else falls back to CPU
+        _llm_instance = Llama(
+            model_path=str(model_path),
+            n_ctx=2048,
+            n_gpu_layers=-1,
+            verbose=False
+        )
+        logger.info("Gemma 4 model loaded successfully.")
+    return _llm_instance
+
 def call_gemma(messages: list[dict], response_format_json: bool = False) -> str:
     """
-    Calls the local Ollama LLM with a list of messages using the official ollama library.
+    Calls the local Gemma 4 LLM with a list of messages using llama-cpp-python.
     """
-    # Clean the host URL (strip trailing slashes and /v1)
-    host = settings.OLLAMA_URL.rstrip("/")
-    if host.endswith("/v1"):
-        host = host[:-3].rstrip("/")
-
-    # Instantiate the official Client with a 300.0s (5 minutes) timeout
-    client = Client(host=host, timeout=300.0)
-
     try:
-        logger.info(f"Sending chat request to Ollama ({host}) for model {settings.MODEL_TAG}")
+        llm = get_llm()
         
-        # Specify format if JSON is requested
-        format_param = "json" if response_format_json else None
-        
-        response = client.chat(
-            model=settings.MODEL_TAG,
-            messages=messages,
-            format=format_param,
-            options={
-                "temperature": 0.2
+        # Set response format for JSON constrained generation
+        response_format = None
+        if response_format_json:
+            response_format = {
+                "type": "json_object"
             }
+            
+        logger.info("Generating response from local Gemma 4 model...")
+        response = llm.create_chat_completion(
+            messages=messages,
+            response_format=response_format,
+            temperature=0.2
         )
-        return response.message.content
+        return response["choices"][0]["message"]["content"]
     except Exception as e:
-        logger.error(f"Ollama chat completion failed: {str(e)}")
+        logger.error(f"Local Gemma generation failed: {str(e)}")
         raise e

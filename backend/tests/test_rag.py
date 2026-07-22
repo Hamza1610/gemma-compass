@@ -52,7 +52,7 @@ def test_rag_pipeline():
     for idx, chunk in enumerate(chunks_text):
         print(f"  Chunk {idx}: {chunk[:50]}...")
 
-    # 3. Store chunks and mock embeddings (since Ollama may be offline)
+    # 3. Store chunks and mock embeddings (since local embedding model may be offline)
     # We will use dummy vectors of 768 float values
     import random
     
@@ -83,7 +83,7 @@ def test_rag_pipeline():
     print("Stored chunks and embeddings in sqlite-vec.")
 
     # 4. Perform vector search
-    # Since Ollama is offline in this sandbox test, retrieve_top_chunks will fallback to sequential chunks
+    # Since local embedding model is offline in this sandbox test, retrieve_top_chunks will fallback to sequential chunks
     # unless we mock get_embedding. Let's test the fallback retrieve and see if it retrieves.
     retrieved = retrieve_top_chunks(session, doc_id, "Newton's Laws", limit=2)
     print(f"Retrieved {len(retrieved)} chunks:")
