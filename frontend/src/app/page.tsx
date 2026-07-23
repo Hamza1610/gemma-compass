@@ -2,9 +2,26 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 import { Compass, BookOpen, BrainCircuit, Globe, ServerOff, ArrowRight, Upload, Languages, Target, Map, Route, Bot, Users, Lightbulb, FileText, Zap, Brain, Apple, Play } from "lucide-react";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const [starting, setStarting] = React.useState(false);
+
+  const handleStartLearning = async () => {
+    if (starting) return;
+    setStarting(true);
+    try {
+      const session = await api.createSession("mixed");
+      localStorage.setItem("compass_session_id", session.id);
+      router.push("/dashboard/upload");
+    } catch (err) {
+      console.error("Failed to start session:", err);
+      setStarting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-white selection:bg-blue-100 flex flex-col overflow-x-hidden">
       
@@ -29,16 +46,14 @@ export default function LandingPage() {
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-4">
-            <Link href="/login" className="hidden sm:block text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
-              Log In
-            </Link>
-            <Link 
-              href="/signup" 
+            <button 
+              onClick={handleStartLearning}
+              disabled={starting}
               className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-gray-900/10 transition-all hover:shadow-gray-900/20 flex items-center space-x-2"
             >
-              <span>Get Started</span>
+              <span>{starting ? "Starting..." : "Start Learning"}</span>
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </header>
@@ -71,13 +86,14 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4 w-full">
-              <Link 
-                href="/signup"
+              <button 
+                onClick={handleStartLearning}
+                disabled={starting}
                 className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold px-8 py-4 rounded-full shadow-xl shadow-blue-600/20 transition-all hover:shadow-blue-600/30 flex items-center justify-center space-x-2"
               >
-                <span>Launch Compass Campus</span>
+                <span>{starting ? "Loading..." : "Launch Compass Campus"}</span>
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </button>
               
               <a 
                 href="#technology"
@@ -321,12 +337,13 @@ export default function LandingPage() {
           <p className="text-gray-500 text-lg">
             Join thousands of students turning their confusing lecture slides into clear, native-language understanding.
           </p>
-          <Link 
-            href="/register"
+          <button 
+            onClick={handleStartLearning}
+            disabled={starting}
             className="bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold px-10 py-4 rounded-full shadow-xl shadow-blue-600/20 transition-all hover:shadow-blue-600/30"
           >
-            Create Your Free Account
-          </Link>
+            {starting ? "Loading..." : "Start Learning Session"}
+          </button>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">

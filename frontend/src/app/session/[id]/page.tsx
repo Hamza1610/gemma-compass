@@ -8,7 +8,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 import { api, Document, Concept, RoadmapItem } from "@/lib/api";
 import { 
   FileText, MessageSquare, GraduationCap, Map,
-  Loader2, AlertCircle, RefreshCcw, ChevronRight, CheckCircle 
+  Loader2, AlertCircle, RefreshCcw, ChevronRight, CheckCircle, BookOpen 
 } from "lucide-react";
 
 export default function SessionDashboard() {
@@ -117,10 +117,10 @@ export default function SessionDashboard() {
             <FileText className="w-3.5 h-3.5" /> Summary & Concepts
           </Link>
           <Link
-            href={`/session/${id}/chat?docId=${docId}`}
+            href={`/session/${id}/study?docId=${docId}`}
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white transition-colors"
           >
-            <MessageSquare className="w-3.5 h-3.5" /> Chat Tutor
+            <BookOpen className="w-3.5 h-3.5" /> Guided Study
           </Link>
           <Link
             href={`/session/${id}/quiz?docId=${docId}`}
@@ -233,10 +233,10 @@ export default function SessionDashboard() {
                       </p>
                       
                       <Link
-                        href={`/session/${id}/chat?docId=${docId}`}
+                        href={`/session/${id}/study?docId=${docId}`}
                         className="text-[9px] font-semibold text-primary hover:text-white transition-colors flex items-center gap-1 mt-1 justify-end"
                       >
-                        Ask Chat Tutor <ChevronRight className="w-2.5 h-2.5" />
+                        Review in Guided Study <ChevronRight className="w-2.5 h-2.5" />
                       </Link>
                     </div>
                   ))}

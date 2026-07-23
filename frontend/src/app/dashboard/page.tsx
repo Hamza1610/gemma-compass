@@ -19,10 +19,10 @@ export default function DashboardHome() {
       {/* Header */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-          Welcome back, Usman!
+          Welcome to your Learning Hub!
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          Your local Edge Node is active. Ready to continue learning?
+          Your local AI Edge Node is active. Ready to continue learning?
         </p>
       </div>
 

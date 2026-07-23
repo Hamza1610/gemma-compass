@@ -30,6 +30,10 @@ def upload_document(
         doc_type = "pdf"
     elif ext in ["png", "jpg", "jpeg"]:
         doc_type = "image"
+    elif ext in ["pptx", "ppt"]:
+        doc_type = "pptx"
+    elif ext in ["docx", "doc"]:
+        doc_type = "docx"
     elif ext in ["txt", "md", "csv"]:
         doc_type = "text"
     else:

@@ -80,9 +80,9 @@ def process_and_explain_document(session: Session, document_path: str, doc_id: s
     session.commit()
 
     # 4. Concept generation via Gemma call
-    # Truncate text context to fit within local model parameters safely (~3500 words)
+    # Truncate text context to fit within local model parameters safely (~1000 words)
     words = raw_text.split()
-    truncated_text = " ".join(words[:3500])
+    truncated_text = " ".join(words[:1000])
     
     concepts_list = []
     logger.info("Generating concepts via Gemma...")
