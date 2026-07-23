@@ -25,9 +25,15 @@ if [[ -f "$MODEL_FILE" ]]; then
 else
   echo "Downloading $MODEL_URL → $MODEL_FILE (~5.0 GB)…"
   if command -v curl > /dev/null 2>&1; then
-    curl -L --fail --progress-bar -o "$MODEL_FILE.partial" "$MODEL_URL"
+    until curl -L --http1.1 -C - --fail --progress-bar -o "$MODEL_FILE.partial" "$MODEL_URL"; do
+      echo "Connection dropped. Resuming download..."
+      sleep 2
+    done
   elif command -v wget > /dev/null 2>&1; then
-    wget --show-progress -O "$MODEL_FILE.partial" "$MODEL_URL"
+    until wget -c --show-progress -O "$MODEL_FILE.partial" "$MODEL_URL"; do
+      echo "Connection dropped. Resuming download..."
+      sleep 2
+    done
   else
     echo "error: neither curl nor wget found" >&2
     exit 1
@@ -42,9 +48,15 @@ if [[ -f "$EMBED_FILE" ]]; then
 else
   echo "Downloading $EMBED_URL → $EMBED_FILE (~140 MB)…"
   if command -v curl > /dev/null 2>&1; then
-    curl -L --fail --progress-bar -o "$EMBED_FILE.partial" "$EMBED_URL"
+    until curl -L --http1.1 -C - --fail --progress-bar -o "$EMBED_FILE.partial" "$EMBED_URL"; do
+      echo "Connection dropped. Resuming download..."
+      sleep 2
+    done
   elif command -v wget > /dev/null 2>&1; then
-    wget --show-progress -O "$EMBED_FILE.partial" "$EMBED_URL"
+    until wget -c --show-progress -O "$EMBED_FILE.partial" "$EMBED_URL"; do
+      echo "Connection dropped. Resuming download..."
+      sleep 2
+    done
   else
     echo "error: neither curl nor wget found" >&2
     exit 1

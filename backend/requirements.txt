@@ -11,3 +11,5 @@ python-multipart
 python-dotenv
 llama-cpp-python
 huggingface-hub
+python-pptx
+python-docx

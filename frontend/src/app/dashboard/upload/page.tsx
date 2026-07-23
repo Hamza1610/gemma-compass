@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { UploadCloud, File, Image as ImageIcon, X, Loader2, CheckCircle2, Scan } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 
 export default function UploadPage() {
   const [isDragging, setIsDragging] = useState(false);
@@ -28,19 +30,26 @@ export default function UploadPage() {
     }
   };
 
-  const simulateUpload = () => {
+  const router = useRouter();
+
+  const handleUpload = async () => {
     if (!file) return;
     setStatus("uploading");
     
-    // Simulate network upload
-    setTimeout(() => {
-      setStatus("processing");
+    try {
+      const sessionId = localStorage.getItem("compass_session_id") || "default_session";
+      const res = await api.uploadDocument(sessionId, file);
+      setStatus("complete");
       
-      // Simulate AKN Concept Extraction
+      // Navigate to the study flow automatically after a brief delay
       setTimeout(() => {
-        setStatus("complete");
-      }, 3000);
-    }, 1500);
+        router.push(`/session/${sessionId}/study?docId=${res.document_id}`);
+      }, 2000);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("Failed to upload document. Please ensure the backend is running.");
+      setStatus("idle");
+    }
   };
 
   return (
@@ -123,7 +132,7 @@ export default function UploadPage() {
               </div>
             </div>
             <button 
-              onClick={simulateUpload}
+              onClick={handleUpload}
               className={`w-full text-white py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-gray-900/10 ${
                 uploadMode === "pq" ? "bg-purple-600 hover:bg-purple-700" : "bg-gray-900 hover:bg-gray-800"
               }`}

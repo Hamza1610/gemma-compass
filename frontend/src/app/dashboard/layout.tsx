@@ -67,22 +67,7 @@ export default function DashboardLayout({
         </div>
 
         <div className="p-4 border-t border-gray-100 space-y-1">
-          <Link href="/dashboard/settings" className={`flex items-center px-4 py-3 rounded-xl cursor-pointer transition-colors ${
-            pathname === '/dashboard/settings' 
-              ? "bg-slate-100 text-slate-900 font-medium" 
-              : "text-gray-600 hover:bg-gray-50"
-          }`}>
-            <Settings className="w-5 h-5" />
-            <span className="ml-3">Settings</span>
-          </Link>
-          <Link href="/dashboard/profile" className={`flex items-center px-4 py-3 rounded-xl cursor-pointer transition-colors ${
-            pathname === '/dashboard/profile' 
-              ? "bg-blue-50 text-blue-600 font-medium" 
-              : "text-gray-600 hover:bg-gray-50"
-          }`}>
-            <User className="w-5 h-5" />
-            <span className="ml-3">Profile</span>
-          </Link>
+          {/* Auth removed for MVP */}
         </div>
       </aside>
 
@@ -122,12 +107,7 @@ export default function DashboardLayout({
               <span className="text-[10px] font-bold text-green-700">{ping}ms</span>
             </div>
 
-            <Link href="/dashboard/settings" className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 border border-slate-200 hover:bg-slate-200 transition-colors">
-              <Settings className="w-4 h-4" />
-            </Link>
-            <Link href="/dashboard/profile" className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 border border-blue-200 hover:bg-blue-200 transition-colors">
-              <User className="w-4 h-4" />
-            </Link>
+            {/* Auth removed for MVP */}
           </div>
         </header>
 

@@ -8,7 +8,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 import { api, Document, QuizQuestion } from "@/lib/api";
 import { 
   FileText, MessageSquare, GraduationCap, 
-  Loader2, AlertCircle, RefreshCcw, ClipboardList, CheckCircle, Map 
+  Loader2, AlertCircle, RefreshCcw, ClipboardList, CheckCircle, Map, BookOpen 
 } from "lucide-react";
 
 export default function ConceptQuiz() {
@@ -139,10 +139,10 @@ export default function ConceptQuiz() {
             <FileText className="w-3.5 h-3.5" /> Summary & Concepts
           </Link>
           <Link
-            href={`/session/${id}/chat?docId=${docId}`}
+            href={`/session/${id}/study?docId=${docId}`}
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white transition-colors"
           >
-            <MessageSquare className="w-3.5 h-3.5" /> Chat Tutor
+            <BookOpen className="w-3.5 h-3.5" /> Guided Study
           </Link>
           <Link
             href={`/session/${id}/quiz?docId=${docId}`}
